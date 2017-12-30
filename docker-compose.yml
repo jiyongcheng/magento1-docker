@@ -1,0 +1,51 @@
+version: '2'
+services:
+  installer:
+    build: docker-images/installer
+    environment:
+      MAGENTO_ROOT: /var/www/html/web
+    volumes_from:
+      - nginx
+    volumes:
+      - ./config/installer/bin/install.sh:/bin/install.sh
+    entrypoint: /bin/install.sh
+  mariadb:
+    hostname: mariadb
+    restart: always
+    image: mariadb:latest
+    ports:
+      - 3306:3306
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=magento
+      - MYSQL_USER=magento
+      - MYSQL_PASSWORD=abc123_
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+  php:
+    build: docker-images/php
+    links:
+      - mariadb
+    volumes:
+      - .:/var/www/html
+  nginx:
+    build: docker-images/nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - "php:phpfpmupstream"
+    volumes:
+      - ./logs/nginx:/var/log/nginx
+    volumes_from:
+      - php
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    links:
+      - mariadb
+    environment:
+      PMA_HOST: "mariadb"
+      PMA_PORT: 3306

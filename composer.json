@@ -1,0 +1,32 @@
+{
+  "name": "yongchengji/dockerized-magento",
+  "description": "Dockerized Magento Community Edition 1.9.x",
+  "homepage": "https://github.com/jiyongcheng/magento1-docker",
+  "require": {
+    "aydin-hassan/magento-core-composer-installer": "*",
+    "magento/core": "^1.9"
+  },
+  "require-dev": {
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.firegento.com"
+    }
+  ],
+  "extra": {
+    "magento-root-dir": "web",
+    "auto-append-gitignore": true
+  },
+  "config": {
+    "discard-changes": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "post-install-cmd": [
+    ],
+    "post-update-cmd": [
+    ]
+  }
+}
