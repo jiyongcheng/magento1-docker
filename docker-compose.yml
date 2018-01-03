@@ -9,8 +9,7 @@ services:
     volumes:
       - ./config/installer/bin/install.sh:/bin/install.sh
     entrypoint: /bin/install.sh
-  mariadb:
-    hostname: mariadb
+  mysql:
     restart: always
     image: mariadb:latest
     ports:
@@ -21,12 +20,10 @@ services:
       - MYSQL_DATABASE=magento
       - MYSQL_USER=magento
       - MYSQL_PASSWORD=abc123_
-    volumes:
-      - ./data/mysql:/var/lib/mysql
   php:
     build: docker-images/php
     links:
-      - mariadb
+      - mysql
     volumes:
       - .:/var/www/html
   nginx:
@@ -45,7 +42,7 @@ services:
     ports:
       - "8080:80"
     links:
-      - mariadb
+      - mysql
     environment:
-      PMA_HOST: "mariadb"
+      PMA_HOST: "mysql"
       PMA_PORT: 3306
